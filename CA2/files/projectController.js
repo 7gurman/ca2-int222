@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
 const Project = require("../models/Project");
 
-// Helper to check valid Mongo ObjectId before querying
 const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// @desc    Add a new project submission
-// @route   POST /api/projects
 const createProject = async (req, res) => {
   try {
     const project = await Project.create(req.body);
@@ -36,8 +33,6 @@ const getAllProjects = async (req, res) => {
   }
 };
 
-// @desc    Retrieve a project submission by ID
-// @route   GET /api/projects/:id
 const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -56,8 +51,6 @@ const getProjectById = async (req, res) => {
   }
 };
 
-// @desc    Update complete project submission details
-// @route   PUT /api/projects/:id
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -66,8 +59,8 @@ const updateProject = async (req, res) => {
     }
 
     const project = await Project.findByIdAndUpdate(id, req.body, {
-      new: true, // return the updated document
-      runValidators: true, // enforce schema validation on update
+      new: true, 
+      runValidators: true, 
       overwrite: false,
     });
 
@@ -88,8 +81,6 @@ const updateProject = async (req, res) => {
   }
 };
 
-// @desc    Update only the project status
-// @route   PATCH /api/projects/:id/status
 const updateProjectStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,8 +117,6 @@ const updateProjectStatus = async (req, res) => {
   }
 };
 
-// @desc    Delete a project submission
-// @route   DELETE /api/projects/:id
 const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -146,8 +135,6 @@ const deleteProject = async (req, res) => {
   }
 };
 
-// @desc    Retrieve submissions based on project status
-// @route   GET /api/projects/status/:status
 const getProjectsByStatus = async (req, res) => {
   try {
     const { status } = req.params;
@@ -166,13 +153,10 @@ const getProjectsByStatus = async (req, res) => {
   }
 };
 
-// @desc    Retrieve projects based on a specific technology
-// @route   GET /api/projects/technology/:tech
 const getProjectsByTechnology = async (req, res) => {
   try {
     const { tech } = req.params;
 
-    // Case-insensitive partial match so "react" matches "React.js", "React Native", etc.
     const projects = await Project.find({
       technologyUsed: { $regex: tech, $options: "i" },
     }).sort({ createdAt: -1 });
